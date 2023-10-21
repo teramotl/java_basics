@@ -1,14 +1,13 @@
 public class Basket {
-
-    private static int count = 0;
     private String items = "";
-    private int totalPrice = 0;
+    private int price = 0;
     private int limit;
     private double totalWeight = 0;
-
+    private static int totalItems = 0;
+    private static int totalItemCost = 0;
+    private static int totalCount = 0;
 
     public Basket() {
-        increaseCount(1);
         items = "Список товаров:";
         this.limit = 1000000;
     }
@@ -21,32 +20,16 @@ public class Basket {
     public Basket(String items, int totalPrice) {
         this();
         this.items = this.items + items;
-        this.totalPrice = totalPrice;
+        this.price = totalPrice;
     }
 
-    public static int getCount() {
-
-        return count;
-    }
-
-    public static void increaseCount(int count) {
-
-        Basket.count = Basket.count + count;
-    }
-
-    public void add(String name, int price) {
-        add(name, price,1,0);
-    }
-    public void add(String name, int price, int count){
-        add(name,price,1,0);
-    }
     public void add(String name, int price, int count, double totalWeight) {
         boolean error = false;
         if (contains(name)) {
             error = true;
         }
 
-        if (totalPrice + count * price >= limit) {
+        if (this.price + count * price >= limit) {
             error = true;
         }
 
@@ -57,18 +40,34 @@ public class Basket {
 
         items = items + "\n" + name + " - " +
                 count + "шт. - " + price + "руб. - " + totalWeight + "кг";
-        totalPrice = totalPrice + count * price;
-        totalWeight += totalWeight * count;
+        this.price = this.price + count * price;
+        this.totalWeight += totalWeight * count;
+        totalItemCost += count * price;
+        totalCount += count;
+        totalItems += count;
     }
+    public static double getTotalItemCost() {
+        return totalItemCost;
+    }
+    public static int getAverageItemPrice() {
+        return totalItemCost / totalCount;
+    }
+    public static double getAverageItemPrice(int totalBasketCount) {
+        return totalItemCost / totalBasketCount;
+    }
+    public static int getTotalItems() {
+        return totalItems;
+    }
+
 
     public void clear() {
         items = "";
-        totalPrice = 0;
+        price = 0;
         totalWeight = 0;
     }
 
-    public int getTotalPrice() {
-        return totalPrice;
+    public int getPrice() {
+        return price;
     }
     public double getTotalWeight() {
         return totalWeight;
