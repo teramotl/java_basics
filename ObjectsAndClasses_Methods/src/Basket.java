@@ -6,8 +6,11 @@ public class Basket {
     private static int totalItems = 0;
     private static int totalItemCost = 0;
     private static int totalCount = 0;
+    private static int basketCount = 0;
+
 
     public Basket() {
+        basketCount += 1;
         items = "Список товаров:";
         this.limit = 1000000;
     }
@@ -46,20 +49,21 @@ public class Basket {
         totalCount += count;
         totalItems += count;
     }
-    public static double getTotalItemCost() {
+    public static int getTotalBaketPrice() {
         return totalItemCost;
-    }
-    public static int getAverageItemPrice() {
-        return totalItemCost / totalCount;
-    }
-    public static double getAverageItemPrice(int totalBasketCount) {
-        return totalItemCost / totalBasketCount;
     }
     public static int getTotalItems() {
         return totalItems;
     }
-
-
+    public static int getAverageItemPrice() {
+        return totalItemCost / totalCount;
+    }
+    public static int getBasketCount() {
+        return basketCount;
+    }
+    public static int getAverageBasketPrice() {
+        return totalItemCost / basketCount;
+    }
     public void clear() {
         items = "";
         price = 0;
