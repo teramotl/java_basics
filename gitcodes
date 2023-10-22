@@ -1,0 +1,55 @@
+cd "road" - road to folder
+pwd - current folder
+ls -la - to see all files in directory
+git status - your status, changes
+git clone "link" - download code
+git clone "link" "name" - downloads code and renames the folder
+git init - add .git
+git remote add origin "link" - get remote status
+git push -u origin main/master - upload your code to server
+git pull - downloads all updates of code (branches, changes...)
+git push - upload code to server
+git commit -m "comment" - commit code
+git add "code name" or . (all) - add code ready for commit
+git log (q to exit) - all commits and logs
+
+branches
+
+git branch - show all branches
+git branch -a - show all branches including server
+
+git checkout -b "branch name" - create new branch and switches to it.
+(or git branch "branch name" - creats new branch BUT doesnt switch. | git checkout "branch name")
+
+git checkout "branch name" - change branch
+git push -u origin "name of new branch for server" - creates new branch on server and pushes code
+
+git stash - save code as Work In Progress WIP
+git stash pop - go back to saved code WIP (auto-merge if code changed)
+git stash list - shows all saved codes
+git stash drop "number of stash" - deletes saved code
+git merge "branch name" - merges code with different branch
+
+git diff "file name" - see changed codes in changed file OR git diff - to see ALL changed files
+git diff "log id" "log id" "file name (to see all files, skip file name)" - to see changes between commits
+git diff "file name" "file name" - compare files, compare differances
+git blame "file name" - see all changes to file (name, date etc)
+
+git restore "file name" - to restore changes back original (same for remove from index)
+git restore --hard - remove ALL changes (except untracked files)
+git clean -f - delete all untracked files
+git rm --cached "file name" - to remove file from tracking (add to .gitignore and rm to not track)
+
+git checkout "log id" "file name" - *!needs to be learned more* goes back to changes
+git revert "log id" - reverts back the changes only to SELECTED log id
+
+git reset --soft "prev log id" - resets to previous log, and saves all changes to index (https://youtu.be/5Sozi5vyGtg)
+git reset "prev log id" or git reset HEAD~1 "log id" - resets to prev log id, saves as modified, not in index.
+git reset --hard "prev log id" - deletes all commites made after that log id. *use carefully*
+git commit --amend -m "comment" - edit last commit comment.
+git commit --amend --no-edit - adds changed file to last commit. (dont forget to add file to index before amend)
+git reset --merge "prev log id" - resets last merging to selected log id.
+git merge --abort - cancels merging *use case: conflict when merging*
+git branch -m "name of branch" - edit branch name *make sure to checkout to that branch before editing name.*
+git branch -d "name of branch" - deletes named branch (after merging) *make sure to checkout different branch before deleting*
+git branch -D "name of branch" - deletes named branch (without needing to merge)
