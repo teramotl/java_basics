@@ -8,7 +8,7 @@ public class Main {
             company.hire(new Operator());
         }
 
-        for (int i = 0; i < 80; i++) {git 
+        for (int i = 0; i < 80; i++) {
             company.hire(new Manager());
         }
 
