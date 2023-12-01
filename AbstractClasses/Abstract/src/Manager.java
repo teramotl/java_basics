@@ -1,15 +1,17 @@
-public class Manager implements Employee {
-    private final double fixedSalary;
-    private final double bonusMultiplier;
+import java.util.Random;
+
+class Manager implements Employee {
+    private double fixedSalary;
+    private double bonusPercentage = 0.05;
+    private double earnedForCompany;
 
     public Manager() {
-        this.fixedSalary = 60_000.0;
-        this.bonusMultiplier = 0.05;
+        this.fixedSalary = Math.random() * (150_000 - 100_000) + 100_000;
+        this.earnedForCompany = Math.random() * (140_000 - 115_000) + 115_000;
     }
 
     @Override
     public double getMonthSalary() {
-        double companyIncome = Math.random() * (140_000 - 115_000) + 115_000;
-        return fixedSalary + companyIncome * bonusMultiplier;
+        return fixedSalary + earnedForCompany * bonusPercentage;
     }
 }

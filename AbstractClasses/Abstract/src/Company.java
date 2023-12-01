@@ -1,8 +1,11 @@
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
 
-public class Company {
-    private final List<Employee> employees = new ArrayList<>();
+class Company {
+    private List<Employee> employees = new ArrayList<>();
+    private static double income = Math.random() * (20_000_000 - 5_000_000) + 5_000_000;
 
     public void hire(Employee employee) {
         employees.add(employee);
@@ -16,25 +19,19 @@ public class Company {
         employees.remove(employee);
     }
 
-    public double getIncome() {
-        return employees.stream().mapToDouble(Employee::getMonthSalary).sum();
+    public static double getIncome() {
+        return income;
     }
 
     public List<Employee> getTopSalaryStaff(int count) {
-        return getSortedEmployees(Comparator.comparingDouble(Employee::getMonthSalary).reversed(), count);
+        List<Employee> sortedList = new ArrayList<>(employees);
+        sortedList.sort(Comparator.comparingDouble(Employee::getMonthSalary).reversed());
+        return sortedList.subList(0, Math.min(count, sortedList.size()));
     }
 
     public List<Employee> getLowestSalaryStaff(int count) {
-        return getSortedEmployees(Comparator.comparingDouble(Employee::getMonthSalary), count);
-    }
-
-    private List<Employee> getSortedEmployees(Comparator<Employee> comparator, int count) {
-        return employees.stream()
-                .sorted(comparator)
-                .limit(count)
-                .collect(Collectors.toList());
-    }
-    public List<Employee> getEmployees() {
-        return new ArrayList<>(employees);
+        List<Employee> sortedList = new ArrayList<>(employees);
+        sortedList.sort(Comparator.comparingDouble(Employee::getMonthSalary));
+        return sortedList.subList(0, Math.min(count, sortedList.size()));
     }
 }

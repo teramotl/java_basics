@@ -1,16 +1,16 @@
-public class TopManager implements Employee {
-    private final double fixedSalary;
-    private final double bonusMultiplier;
-    private static final double HIGH_INCOME_THRESHOLD = 10_000_000.0;
+import java.util.Random;
+
+class TopManager implements Employee {
+    private double fixedSalary;
+    private double bonusMultiplier = 1.5;
+    private double companyIncomeThreshold = 10_000_000;
 
     public TopManager() {
-        this.fixedSalary = 80_000.0;
-        this.bonusMultiplier = 1.5;
+        this.fixedSalary = Math.random() * (230_000 - 160_000) + 160_000;
     }
 
     @Override
     public double getMonthSalary() {
-        double companyIncome = Math.random() * (20_000_000 - 5_000_000) + 5_000_000;
-        return fixedSalary + (companyIncome > HIGH_INCOME_THRESHOLD ? fixedSalary * bonusMultiplier : 0);
+        return fixedSalary + (Company.getIncome() > companyIncomeThreshold ? fixedSalary * bonusMultiplier : 0);
     }
 }

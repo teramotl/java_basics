@@ -1,14 +1,14 @@
-public class Operator implements Employee {
+import java.util.Random;
 
-    private final double fixedSalary;
+class Operator implements Employee {
+    private double fixedSalary;
 
     public Operator() {
-        this.fixedSalary = 50_000.0;
+        this.fixedSalary = Math.random() * (120_000 - 100_000) + 100_000;
     }
 
     @Override
     public double getMonthSalary() {
         return fixedSalary;
     }
-
 }
