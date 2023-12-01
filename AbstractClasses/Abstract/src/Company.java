@@ -28,7 +28,6 @@ class Company {
         sortedList.sort(Comparator.comparingDouble(Employee::getMonthSalary).reversed());
         return sortedList.subList(0, Math.min(count, sortedList.size()));
     }
-
     public List<Employee> getLowestSalaryStaff(int count) {
         List<Employee> sortedList = new ArrayList<>(employees);
         sortedList.sort(Comparator.comparingDouble(Employee::getMonthSalary));
