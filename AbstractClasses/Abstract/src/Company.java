@@ -5,10 +5,14 @@ import java.util.List;
 
 class Company {
     private List<Employee> employees = new ArrayList<>();
-    private static double income = Math.random() * (20_000_000 - 5_000_000) + 5_000_000;
+    private double income;
+    public Company() {
+        this.income = Math.random() * (20_000_000 - 5_000_000) + 5_000_000;
+     }
 
     public void hire(Employee employee) {
         employees.add(employee);
+        employee.setCompany(this);
     }
 
     public void hireAll(Collection<Employee> newEmployees) {
@@ -17,9 +21,10 @@ class Company {
 
     public void fire(Employee employee) {
         employees.remove(employee);
+        employee.setCompany(null);
     }
 
-    public static double getIncome() {
+    public double getIncome() {
         return income;
     }
 
