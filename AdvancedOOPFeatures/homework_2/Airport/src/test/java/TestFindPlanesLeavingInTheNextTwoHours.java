@@ -84,7 +84,7 @@ public class TestFindPlanesLeavingInTheNextTwoHours {
         airport.getTerminals().clear();
         airport.getTerminals().addAll(terminals);
 
-        List<Flight> actualFlight = gitMain.findPlanesLeavingInTheNextTwoHours(airport);
+        List<Flight> actualFlight = Main.findPlanesLeavingInTheNextTwoHours(airport);
 
         assertIterableEquals(expectedFlights, actualFlight,
                 String.join(", ", String.format("%nExpected:%s%n%nActual:%s%n%n",
