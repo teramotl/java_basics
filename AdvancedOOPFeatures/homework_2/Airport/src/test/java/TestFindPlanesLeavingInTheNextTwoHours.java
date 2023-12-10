@@ -1,3 +1,5 @@
+package test.java;
+
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 
 import com.skillbox.airport.Aircraft;
@@ -10,6 +12,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.IntStream;
+
+import main.java.Main;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -80,14 +84,13 @@ public class TestFindPlanesLeavingInTheNextTwoHours {
         airport.getTerminals().clear();
         airport.getTerminals().addAll(terminals);
 
-        List<Flight> actualFlight = Main.findPlanesLeavingInTheNextTwoHours(airport);
+        List<Flight> actualFlight = gitMain.findPlanesLeavingInTheNextTwoHours(airport);
 
         assertIterableEquals(expectedFlights, actualFlight,
                 String.join(", ", String.format("%nExpected:%s%n%nActual:%s%n%n",
                         stringify(expectedFlights),
                         stringify(actualFlight))
                 ));
-
     }
 
 }
