@@ -1,3 +1,5 @@
+package test.java;
+
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 
 import com.skillbox.airport.Aircraft;
@@ -10,6 +12,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.IntStream;
+
+import main.java.Main;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -87,7 +91,6 @@ public class TestFindPlanesLeavingInTheNextTwoHours {
                         stringify(expectedFlights),
                         stringify(actualFlight))
                 ));
-
     }
 
 }
