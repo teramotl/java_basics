@@ -1,25 +1,25 @@
 public class MetroStation {
     private String name;
-    private String number;
+    private String line;
 
-    public MetroStation(String name, String number) {
+    public MetroStation(String name, String line) {
         this.name = name;
-        this.number = number;
+        this.line = line;
     }
 
     public String getName() {
         return name;
     }
 
-    public String getNumber() {
-        return number;
+    public String getLine() {
+        return line;
     }
 
     @Override
     public String toString() {
         return "MetroStation{" +
                 "name='" + name + '\'' +
-                ", number='" + number + '\'' +
+                ", line='" + line + '\'' +
                 '}';
     }
 }

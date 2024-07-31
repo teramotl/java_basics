@@ -9,7 +9,7 @@ import java.util.List;
 
 public class MetroParser {
 
-    public List<Station> parseStationNames(String url) throws IOException {
+    public List<MetroStation> parseMetroData(String url) throws IOException {
         // Fetch the HTML content
         Document document = Jsoup.connect(url).get();
 
@@ -19,10 +19,13 @@ public class MetroParser {
         // Select all metro line elements
         Elements lineElements = metroDataDiv.select(".js-toggle-depend");
 
-        List<Station> stations = new ArrayList<>();
+        List<MetroStation> metroStations = new ArrayList<>();
 
-        // Loop through each line element and extract station names
+        // Loop through each line element and extract line name and stations
         for (Element lineElement : lineElements) {
+            Element lineNameElement = lineElement.selectFirst(".js-metro-line");
+            String lineName = lineNameElement.text().trim();
+
             // Get the corresponding stations container
             Element stationsContainer = lineElement.nextElementSibling();
             Elements stationElements = stationsContainer.select(".single-station");
@@ -30,21 +33,22 @@ public class MetroParser {
             // Extract station names and add to the list
             for (Element stationElement : stationElements) {
                 String stationName = stationElement.selectFirst(".name").text().trim();
-                stations.add(new Station(stationName));
+                MetroStation metroStation = new MetroStation(stationName, lineName);
+                metroStations.add(metroStation);
             }
         }
 
-        return stations;
+        return metroStations;
     }
 
     public static void main(String[] args) {
         MetroParser parser = new MetroParser();
         try {
-            List<Station> stations = parser.parseStationNames("https://skillbox-java.github.io/");
+            List<MetroStation> metroStations = parser.parseMetroData("https://skillbox-java.github.io/");
 
             // Print the extracted data
-            for (Station station : stations) {
-                System.out.println(station.getName());
+            for (MetroStation station : metroStations) {
+                System.out.println(station);
             }
         } catch (IOException e) {
             e.printStackTrace();

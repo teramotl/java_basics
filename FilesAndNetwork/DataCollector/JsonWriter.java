@@ -7,21 +7,32 @@ import java.util.List;
 
 public class JsonWriter {
 
-    public static void writeStationsToJson(List<Station> stations, String filePath) throws IOException {
+    public void writeStationsToJson(List<MetroStation> stations, String filePath) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
-        // Enable pretty printing
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
-        // Create a wrapper class for the JSON structure
+
+        // Create a wrapper class for the stations list
+        class StationsWrapper {
+            public List<MetroStation> stations;
+
+            public StationsWrapper(List<MetroStation> stations) {
+                this.stations = stations;
+            }
+        }
+
         StationsWrapper wrapper = new StationsWrapper(stations);
+
+        // Write the JSON file
         mapper.writeValue(new File(filePath), wrapper);
     }
 
     public static void main(String[] args) {
         MetroParser parser = new MetroParser();
         try {
-            List<Station> stations = parser.parseStationNames("https://skillbox-java.github.io/");
-            writeStationsToJson(stations, "stations.json");
-            System.out.println("JSON file created successfully.");
+            List<MetroStation> metroStations = parser.parseMetroData("https://skillbox-java.github.io/");
+
+            JsonWriter writer = new JsonWriter();
+            writer.writeStationsToJson(metroStations, "C:\\Users\\Tera\\Desktop\\stations.json");
         } catch (IOException e) {
             e.printStackTrace();
         }
