@@ -66,17 +66,25 @@ public class JsonWriter {
     public static void main(String[] args) {
         MetroParser metroParser = new MetroParser();
         CsvParser csvParser = new CsvParser();
+        FileSearcher fileSearcher = new FileSearcher();
         JsonWriter jsonWriter = new JsonWriter();
 
         try {
             // Parse metro data
             List<MetroStation> metroStations = metroParser.parseMetroData("https://skillbox-java.github.io/");
 
-            // Parse CSV data
-            List<StationDate> stationDates = csvParser.parseCsvFile("C:\\Users\\Tera\\Desktop\\newData\\dates-1.csv");
+            // Search for all CSV files in the specified directory
+            List<File> csvFiles = fileSearcher.searchFiles("C:\\Users\\Tera\\Desktop\\newData", ".csv");
+
+            // Parse all CSV files and aggregate the data
+            List<StationDate> allStationDates = new ArrayList<>();
+            for (File csvFile : csvFiles) {
+                List<StationDate> stationDates = csvParser.parseCsvFile(csvFile.getAbsolutePath());
+                allStationDates.addAll(stationDates);
+            }
 
             // Write to JSON file
-            jsonWriter.writeStationsToJson(metroStations, stationDates, "C:\\Users\\Tera\\Desktop\\stations.json");
+            jsonWriter.writeStationsToJson(metroStations, allStationDates, "C:\\Users\\Tera\\Desktop\\stations.json");
 
             System.out.println("Data aggregation and JSON writing completed successfully!");
         } catch (IOException e) {
