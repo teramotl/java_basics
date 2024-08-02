@@ -95,6 +95,7 @@ public class JsonWriter {
     public void writeMapToJson(String url, String filePath) throws IOException {
         MetroParser metroParser = new MetroParser();
         List<MetroStation> metroStations = metroParser.parseMetroData(url);
+        List<List<Connection>> connections = metroParser.parseConnections(url);
 
         // Create a map to hold stations by line number
         Map<String, List<String>> stationsByLine = new LinkedHashMap<>();
@@ -108,6 +109,7 @@ public class JsonWriter {
         // Create the final JSON structure
         Map<String, Object> mapJson = new LinkedHashMap<>();
         mapJson.put("stations", stationsByLine);
+        mapJson.put("connections", connections);
 
         // Write the JSON file
         ObjectMapper mapper = new ObjectMapper();
