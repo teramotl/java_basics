@@ -1,39 +1,44 @@
-import java.util.ArrayList;
-import java.util.List;
-
 public class MetroLine {
+    private int number;
     private String name;
-    private String number;
-    private List<MetroStation> stations;
+    private String color;
 
-    public MetroLine(String name, String number) {
-        this.name = name;
+    public MetroLine(int number, String name, String color) {
         this.number = number;
-        this.stations = new ArrayList<>();
+        this.name = name;
+        this.color = color;
     }
 
-    public void addStation(MetroStation station) {
-        stations.add(station);
+    public int getNumber() {
+        return number;
+    }
+
+    public void setNumber(int number) {
+        this.number = number;
     }
 
     public String getName() {
         return name;
     }
 
-    public String getNumber() {
-        return number;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public List<MetroStation> getStations() {
-        return stations;
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
     }
 
     @Override
     public String toString() {
         return "MetroLine{" +
-                "name='" + name + '\'' +
-                ", number='" + number + '\'' +
-                ", stations=" + stations +
+                "number=" + number +
+                ", name='" + name + '\'' +
+                ", color='" + color + '\'' +
                 '}';
     }
 }

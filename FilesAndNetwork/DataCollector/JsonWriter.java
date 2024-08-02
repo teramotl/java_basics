@@ -96,6 +96,7 @@ public class JsonWriter {
         MetroParser metroParser = new MetroParser();
         List<MetroStation> metroStations = metroParser.parseMetroData(url);
         List<List<Connection>> connections = metroParser.parseConnections(url);
+        List<MetroLine> metroLines = metroParser.parseLines(url);
 
         // Create a map to hold stations by line number
         Map<String, List<String>> stationsByLine = new LinkedHashMap<>();
@@ -110,6 +111,7 @@ public class JsonWriter {
         Map<String, Object> mapJson = new LinkedHashMap<>();
         mapJson.put("stations", stationsByLine);
         mapJson.put("connections", connections);
+        mapJson.put("lines", metroLines);
 
         // Write the JSON file
         ObjectMapper mapper = new ObjectMapper();
@@ -156,7 +158,7 @@ public class JsonWriter {
             // Write the map.json file
             jsonWriter.writeMapToJson("https://skillbox-java.github.io/", "C:\\Users\\Tera\\Desktop\\map.json");
 
-            System.out.println("Data aggregation and JSON writing completed successfully!");
+            System.out.println("Data written to JSON files successfully.");
         } catch (IOException e) {
             e.printStackTrace();
         }

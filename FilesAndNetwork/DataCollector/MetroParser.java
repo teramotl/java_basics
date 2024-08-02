@@ -67,11 +67,49 @@ public class MetroParser {
         return connections;
     }
 
+    public List<MetroLine> parseLines(String url) throws IOException {
+        // Fetch the HTML content
+        Document document = Jsoup.connect(url).get();
+
+        // Select the div with id "metrodata"
+        Element metroDataDiv = document.getElementById("metrodata");
+
+        // Select all line elements
+        Elements lineElements = metroDataDiv.select(".js-metro-line");
+
+        List<MetroLine> lines = new ArrayList<>();
+
+        for (Element lineElement : lineElements) {
+            String lineNumberStr = lineElement.className().replaceAll("\\D+", ""); // Extract numbers from class name
+            int lineNumber = 0;
+            try {
+                lineNumber = Integer.parseInt(lineNumberStr);
+            } catch (NumberFormatException e) {
+                // Handle invalid number formats (e.g., "11A")
+                System.err.println("Skipping invalid line number: " + lineNumberStr);
+                continue;
+            }
+
+            String lineName = lineElement.text().trim();
+            String lineColor = "unknown"; // Default value
+
+            // Optionally, you might want to add color extraction logic here
+            // Example: Extracting color based on class or attributes
+
+            MetroLine metroLine = new MetroLine(lineNumber, lineName, lineColor);
+            lines.add(metroLine);
+        }
+
+        return lines;
+    }
+
+
     public static void main(String[] args) {
         MetroParser parser = new MetroParser();
         try {
             List<MetroStation> metroStations = parser.parseMetroData("https://skillbox-java.github.io/");
             List<List<Connection>> connections = parser.parseConnections("https://skillbox-java.github.io/");
+            List<MetroLine> metroLines = parser.parseLines("https://skillbox-java.github.io/");
 
             // Print the extracted data
             for (MetroStation station : metroStations) {
@@ -83,6 +121,11 @@ public class MetroParser {
                 for (Connection connection : connectionList) {
                     System.out.println(connection);
                 }
+            }
+
+            // Print the lines
+            for (MetroLine line : metroLines) {
+                System.out.println(line);
             }
         } catch (IOException e) {
             e.printStackTrace();
