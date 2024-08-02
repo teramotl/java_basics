@@ -37,31 +37,31 @@ public class JsonWriter {
         Element metroDataDiv = document.getElementById("metrodata");
 
         // List to store station information
-        List<Map<String, Object>> stationsList = new ArrayList<>();
+        List<StationInfo> stationsList = new ArrayList<>();
         for (MetroStation station : stations) {
-            Map<String, Object> stationInfo = new HashMap<>();
-            stationInfo.put("name", station.getName());
-            stationInfo.put("line", station.getLine());
+            StationInfo stationInfo = new StationInfo();
+            stationInfo.setName(station.getName());
+            stationInfo.setLine(station.getLine());
 
             // Add the date if available
             String date = stationDateMap.get(station.getName());
             if (date != null) {
-                stationInfo.put("date", date);
+                stationInfo.setDate(date);
             }
 
             // Add the depth if available
             String depth = stationDepthMap.get(station.getName());
             if (depth != null) {
-                stationInfo.put("depth", depth);
+                stationInfo.setDepth(depth);
             }
 
             // Check if the station has connections
             Element stationElement = metroDataDiv.selectFirst(".single-station:contains(" + station.getName() + ")");
             if (stationElement != null) {
                 boolean hasConnection = connectionParser.hasConnection(stationElement);
-                stationInfo.put("hasConnection", hasConnection);
+                stationInfo.setHasConnection(hasConnection);
             } else {
-                stationInfo.put("hasConnection", false);
+                stationInfo.setHasConnection(false);
             }
 
             stationsList.add(stationInfo);
