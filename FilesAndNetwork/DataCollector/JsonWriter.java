@@ -1,3 +1,6 @@
+import com.fasterxml.jackson.core.PrettyPrinter;
+import com.fasterxml.jackson.core.util.DefaultIndenter;
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import org.jsoup.Jsoup;
@@ -76,12 +79,25 @@ public class JsonWriter {
     }
 
     // New method to create map.json file
+    public static class CustomPrettyPrinter extends DefaultPrettyPrinter {
+        public CustomPrettyPrinter() {
+            DefaultIndenter indenter = new DefaultIndenter("  ", "\n");
+            this.indentArraysWith(indenter);
+        }
+
+        @Override
+        public DefaultPrettyPrinter createInstance() {
+            return new CustomPrettyPrinter();
+        }
+    }
+
+    // New method to create map.json file
     public void writeMapToJson(String url, String filePath) throws IOException {
         MetroParser metroParser = new MetroParser();
         List<MetroStation> metroStations = metroParser.parseMetroData(url);
 
         // Create a map to hold stations by line number
-        Map<String, List<String>> stationsByLine = new HashMap<>();
+        Map<String, List<String>> stationsByLine = new LinkedHashMap<>();
 
         for (MetroStation station : metroStations) {
             String line = station.getLine();
@@ -90,13 +106,15 @@ public class JsonWriter {
         }
 
         // Create the final JSON structure
-        Map<String, Object> mapJson = new HashMap<>();
+        Map<String, Object> mapJson = new LinkedHashMap<>();
         mapJson.put("stations", stationsByLine);
 
         // Write the JSON file
         ObjectMapper mapper = new ObjectMapper();
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
-        mapper.writeValue(new File(filePath), mapJson);
+        CustomPrettyPrinter prettyPrinter = new CustomPrettyPrinter();
+
+        mapper.writer(prettyPrinter).writeValue(new File(filePath), mapJson);
     }
 
     public static void main(String[] args) {
