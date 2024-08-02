@@ -10,8 +10,8 @@ import java.util.*;
 
 public class JsonWriter {
 
-    // Function to write stations to JSON with dates and connection status included
-    public void writeStationsToJson(List<MetroStation> stations, List<StationDate> stationDates, String filePath) throws IOException {
+    // Function to write stations to JSON with dates, depth, and connection status included
+    public void writeStationsToJson(List<MetroStation> stations, List<StationDate> stationDates, List<StationDepth> stationDepths, String filePath) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
 
@@ -19,6 +19,12 @@ public class JsonWriter {
         Map<String, String> stationDateMap = new HashMap<>();
         for (StationDate stationDate : stationDates) {
             stationDateMap.put(stationDate.getName(), stationDate.getDate());
+        }
+
+        // Create a map to store the depth of each station by its name
+        Map<String, String> stationDepthMap = new HashMap<>();
+        for (StationDepth stationDepth : stationDepths) {
+            stationDepthMap.put(stationDepth.getStation_name(), stationDepth.getDepth());
         }
 
         // Initialize the ConnectionParser
@@ -41,6 +47,12 @@ public class JsonWriter {
             String date = stationDateMap.get(station.getName());
             if (date != null) {
                 stationInfo.put("date", date);
+            }
+
+            // Add the depth if available
+            String depth = stationDepthMap.get(station.getName());
+            if (depth != null) {
+                stationInfo.put("depth", depth);
             }
 
             // Check if the station has connections
@@ -66,6 +78,7 @@ public class JsonWriter {
     public static void main(String[] args) {
         MetroParser metroParser = new MetroParser();
         CsvParser csvParser = new CsvParser();
+        JsonParser jsonParser = new JsonParser();
         FileSearcher fileSearcher = new FileSearcher();
         JsonWriter jsonWriter = new JsonWriter();
 
@@ -83,8 +96,18 @@ public class JsonWriter {
                 allStationDates.addAll(stationDates);
             }
 
+            // Search for all JSON files in the specified directory
+            List<File> jsonFiles = fileSearcher.searchFiles("C:\\Users\\Tera\\Desktop\\depths", ".json");
+
+            // Parse all JSON files and aggregate the data
+            List<StationDepth> allStationDepths = new ArrayList<>();
+            for (File jsonFile : jsonFiles) {
+                List<StationDepth> stationDepths = jsonParser.parseJsonFile(jsonFile.getAbsolutePath());
+                allStationDepths.addAll(stationDepths);
+            }
+
             // Write to JSON file
-            jsonWriter.writeStationsToJson(metroStations, allStationDates, "C:\\Users\\Tera\\Desktop\\stations.json");
+            jsonWriter.writeStationsToJson(metroStations, allStationDates, allStationDepths, "C:\\Users\\Tera\\Desktop\\stations.json");
 
             System.out.println("Data aggregation and JSON writing completed successfully!");
         } catch (IOException e) {
