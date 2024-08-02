@@ -75,6 +75,30 @@ public class JsonWriter {
         mapper.writeValue(new File(filePath), stationsMap);
     }
 
+    // New method to create map.json file
+    public void writeMapToJson(String url, String filePath) throws IOException {
+        MetroParser metroParser = new MetroParser();
+        List<MetroStation> metroStations = metroParser.parseMetroData(url);
+
+        // Create a map to hold stations by line number
+        Map<String, List<String>> stationsByLine = new HashMap<>();
+
+        for (MetroStation station : metroStations) {
+            String line = station.getLine();
+            stationsByLine.putIfAbsent(line, new ArrayList<>());
+            stationsByLine.get(line).add(station.getName());
+        }
+
+        // Create the final JSON structure
+        Map<String, Object> mapJson = new HashMap<>();
+        mapJson.put("stations", stationsByLine);
+
+        // Write the JSON file
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.enable(SerializationFeature.INDENT_OUTPUT);
+        mapper.writeValue(new File(filePath), mapJson);
+    }
+
     public static void main(String[] args) {
         MetroParser metroParser = new MetroParser();
         CsvParser csvParser = new CsvParser();
@@ -108,6 +132,9 @@ public class JsonWriter {
 
             // Write to JSON file
             jsonWriter.writeStationsToJson(metroStations, allStationDates, allStationDepths, "C:\\Users\\Tera\\Desktop\\stations.json");
+
+            // Write the map.json file
+            jsonWriter.writeMapToJson("https://skillbox-java.github.io/", "C:\\Users\\Tera\\Desktop\\map.json");
 
             System.out.println("Data aggregation and JSON writing completed successfully!");
         } catch (IOException e) {
