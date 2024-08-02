@@ -91,12 +91,11 @@ public class MetroParser {
             }
 
             String lineName = lineElement.text().trim();
-            String lineColor = "unknown"; // Default value
 
             // Optionally, you might want to add color extraction logic here
             // Example: Extracting color based on class or attributes
 
-            MetroLine metroLine = new MetroLine(lineNumber, lineName, lineColor);
+            MetroLine metroLine = new MetroLine(lineNumber, lineName);
             lines.add(metroLine);
         }
 
