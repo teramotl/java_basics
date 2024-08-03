@@ -12,11 +12,16 @@ public class Main {
         JsonWriter jsonWriter = new JsonWriter();
 
         try {
-            // Parse metro data
+
+            // Search for all JSON files in the specified directory
+            List<File> jsonFiles = fileSearcher.searchFiles("C:\\Users\\Tera\\Desktop\\data", ".json");
+            // Search for all CSV files in the specified directory
+            List<File> csvFiles = fileSearcher.searchFiles("C:\\Users\\Tera\\Desktop\\data", ".csv");
+            // Parse metro data from specified url
             List<MetroStation> metroStations = metroParser.parseMetroData("https://skillbox-java.github.io/");
 
-            // Search for all CSV files in the specified directory
-            List<File> csvFiles = fileSearcher.searchFiles("C:\\Users\\Tera\\Desktop\\newData", ".csv");
+
+            
 
             // Parse all CSV files and aggregate the data
             List<StationDate> allStationDates = new ArrayList<>();
@@ -25,8 +30,6 @@ public class Main {
                 allStationDates.addAll(stationDates);
             }
 
-            // Search for all JSON files in the specified directory
-            List<File> jsonFiles = fileSearcher.searchFiles("C:\\Users\\Tera\\Desktop\\depths", ".json");
 
             // Parse all JSON files and aggregate the data
             List<StationDepth> allStationDepths = new ArrayList<>();
