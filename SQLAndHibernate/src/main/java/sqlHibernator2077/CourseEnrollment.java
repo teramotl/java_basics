@@ -7,22 +7,19 @@ import javax.persistence.*;
 public class CourseEnrollment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "enrollment_id")
     private int enrollmentId;
 
     @ManyToOne
-    @JoinColumn(name = "course_id")
+    @JoinColumn(name = "course_id", nullable = false)
     private Course course;
 
-    @ManyToOne
-    @JoinColumn(name = "student_id")
-    private Student student;
-
-    public int getEnrollmentId() {
-        return enrollmentId;
+    public Student getStudent() {
+        return student;
     }
 
-    public void setEnrollmentId(int enrollmentId) {
-        this.enrollmentId = enrollmentId;
+    public void setStudent(Student student) {
+        this.student = student;
     }
 
     public Course getCourse() {
@@ -33,13 +30,17 @@ public class CourseEnrollment {
         this.course = course;
     }
 
-    public Student getStudent() {
-        return student;
+    public int getEnrollmentId() {
+        return enrollmentId;
     }
 
-    public void setStudent(Student student) {
-        this.student = student;
+    public void setEnrollmentId(int enrollmentId) {
+        this.enrollmentId = enrollmentId;
     }
+
+    @ManyToOne
+    @JoinColumn(name = "student_id", nullable = false)
+    private Student student;
 
     // Getters and Setters
 }

@@ -8,16 +8,21 @@ import java.util.Set;
 public class Teacher {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "teacher_id")
     private int teacherId;
 
+    @Column(name = "teacher_name")
     private String teacherName;
 
-    public Set<TeacherAssignment> getTeacherAssignments() {
-        return teacherAssignments;
+    @OneToMany(mappedBy = "teacher")
+    private Set<TeacherAssignment> teacherAssignments;
+
+    public int getTeacherId() {
+        return teacherId;
     }
 
-    public void setTeacherAssignments(Set<TeacherAssignment> teacherAssignments) {
-        this.teacherAssignments = teacherAssignments;
+    public void setTeacherId(int teacherId) {
+        this.teacherId = teacherId;
     }
 
     public String getTeacherName() {
@@ -28,16 +33,12 @@ public class Teacher {
         this.teacherName = teacherName;
     }
 
-    public int getTeacherId() {
-        return teacherId;
+    public Set<TeacherAssignment> getTeacherAssignments() {
+        return teacherAssignments;
     }
 
-    public void setTeacherId(int teacherId) {
-        this.teacherId = teacherId;
+    public void setTeacherAssignments(Set<TeacherAssignment> teacherAssignments) {
+        this.teacherAssignments = teacherAssignments;
     }
-
-    @OneToMany(mappedBy = "teacher")
-    private Set<TeacherAssignment> teacherAssignments;
-
-    // Getters and Setters
+// Getters and Setters
 }

@@ -5,27 +5,17 @@ import javax.persistence.*;
 @Entity
 @Table(name = "Subscriptions")
 public class Subscription {
-    @EmbeddedId
-    private SubscriptionKey id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "subscription_id")
+    private int subscriptionId;
 
-    @MapsId("studentId")
-    @ManyToOne
-    @JoinColumn(name = "student_id")
-    private Student student;
-
-    @MapsId("courseId")
-    @ManyToOne
-    @JoinColumn(name = "course_id")
-    private Course course;
-
-    private String subscriptionType;
-
-    public SubscriptionKey getId() {
-        return id;
+    public int getSubscriptionId() {
+        return subscriptionId;
     }
 
-    public void setId(SubscriptionKey id) {
-        this.id = id;
+    public void setSubscriptionId(int subscriptionId) {
+        this.subscriptionId = subscriptionId;
     }
 
     public Student getStudent() {
@@ -52,6 +42,16 @@ public class Subscription {
         this.subscriptionType = subscriptionType;
     }
 
+    @ManyToOne
+    @JoinColumn(name = "student_id", nullable = false)
+    private Student student;
+
+    @ManyToOne
+    @JoinColumn(name = "course_id", nullable = false)
+    private Course course;
+
+    @Column(name = "subscription_type")
+    private String subscriptionType;
+
     // Getters and Setters
 }
-
