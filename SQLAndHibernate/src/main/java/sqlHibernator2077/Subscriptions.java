@@ -5,44 +5,44 @@ import java.util.Date;
 
 @Entity
 @Table(name = "subscriptions")
-public class Subscriptions
-{
-    @Id
-    @ManyToOne
-    @JoinColumn(name = "student_id", nullable = false)
-    private Students students;
+@IdClass(SubscriptionId.class)
+public class Subscriptions {
 
     @Id
-    @ManyToOne
-    @JoinColumn(name = "course_id", nullable = false)
-    private Courses courses;
+    @Column(name = "student_id")
+    private int studentId;
+
+    @Id
+    @Column(name = "course_id")
+    private int courseId;
 
     @Column(name = "subscription_date")
     @Temporal(TemporalType.DATE)
     private Date subscriptionDate;
 
+    // Constructors, getters, and setters
     public Subscriptions() {}
 
-    public Subscriptions(Students students, Courses courses, Date subscriptionDate) {
-        this.students = students;
-        this.courses = courses;
+    public Subscriptions(int studentId, int courseId, Date subscriptionDate) {
+        this.studentId = studentId;
+        this.courseId = courseId;
         this.subscriptionDate = subscriptionDate;
     }
 
-    public Students getStudents() {
-        return students;
+    public int getStudentId() {
+        return studentId;
     }
 
-    public void setStudents(Students students) {
-        this.students = students;
+    public void setStudentId(int studentId) {
+        this.studentId = studentId;
     }
 
-    public Courses getCourses() {
-        return courses;
+    public int getCourseId() {
+        return courseId;
     }
 
-    public void setCourses(Courses courses) {
-        this.courses = courses;
+    public void setCourseId(int courseId) {
+        this.courseId = courseId;
     }
 
     public Date getSubscriptionDate() {

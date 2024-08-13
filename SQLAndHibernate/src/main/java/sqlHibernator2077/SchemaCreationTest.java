@@ -9,16 +9,16 @@ public class SchemaCreationTest
         //config to create object and load xml file
         Configuration configuration = new Configuration().configure();
 
-        //build session factory from config and close it to release resources
-        SessionFactory sessionFactory = configuration.buildSessionFactory();
-        sessionFactory.close();
 
         //add class to config
         configuration.addAnnotatedClass(Students.class);
         configuration.addAnnotatedClass(Teacher.class);
         configuration.addAnnotatedClass(Courses.class);
+        configuration.addAnnotatedClass(Subscriptions.class);
 
-
+        //build session factory from config and close it to release resources
+        SessionFactory sessionFactory = configuration.buildSessionFactory();
+        sessionFactory.close();
 
         System.out.println("SUCCESS");
     }
