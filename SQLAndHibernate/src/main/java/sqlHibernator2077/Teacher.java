@@ -10,16 +10,16 @@ public class Teacher
     @Column(name = "id")
     private int id;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", nullable = false, length = 45)
     private String name;
 
     @Column(name = "salary")
-    private double salary;
+    private int salary;
 
     @Column(name = "age")
     private int age;
 
-    public Teacher(String name, double salary, int age) {
+    public Teacher(String name, int salary, int age) {
         this.name = name;
         this.salary = salary;
         this.age = age;
@@ -45,7 +45,7 @@ public class Teacher
         return salary;
     }
 
-    public void setSalary(double salary) {
+    public void setSalary(int salary) {
         this.salary = salary;
     }
 
