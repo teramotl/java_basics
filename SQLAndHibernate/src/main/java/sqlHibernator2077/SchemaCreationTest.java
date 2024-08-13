@@ -12,6 +12,7 @@ public class SchemaCreationTest
         //add class to config
         configuration.addAnnotatedClass(Students.class);
         configuration.addAnnotatedClass(Teacher.class);
+        configuration.addAnnotatedClass(Courses.class);
 
 
         //build session factory from config and close it to release resources
