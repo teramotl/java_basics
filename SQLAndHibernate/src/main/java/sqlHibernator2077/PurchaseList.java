@@ -1,38 +1,46 @@
 package sqlHibernator2077;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-@Table(name = "purchaselist")
-public class PurchaseList
-{
+@Table(name = "purchaseList")
+@IdClass(PurchaseListId.class)
+public class PurchaseList {
+
+    @Id
+    @Column(name = "student_name", length = 100)
+    private String studentName;
+
+    @Id
+    @Column(name = "course_name", length = 100)
+    private String courseName;
+
     @Column(name = "price")
     private int price;
 
-    @Temporal(TemporalType.DATE)
     @Column(name = "subscription_date")
+    @Temporal(TemporalType.DATE)
     private Date subscriptionDate;
 
-    @Column(name = "student_name")
-    private String name;
+    // Constructors
+    public PurchaseList() {}
 
-    @Column(name = "course_name")
-    private String courseName;
-
-    public PurchaseList(int price, Date subscriptionDate, String name, String courseName) {
+    public PurchaseList(String studentName, String courseName, int price, Date subscriptionDate) {
+        this.studentName = studentName;
+        this.courseName = courseName;
         this.price = price;
         this.subscriptionDate = subscriptionDate;
-        this.name = name;
-        this.courseName = courseName;
     }
 
-    public String getName() {
-        return name;
+    // Getters and Setters
+    public String getStudentName() {
+        return studentName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setStudentName(String studentName) {
+        this.studentName = studentName;
     }
 
     public String getCourseName() {

@@ -15,7 +15,7 @@ public class SchemaCreationTest
         configuration.addAnnotatedClass(Teacher.class);
         configuration.addAnnotatedClass(Courses.class);
         configuration.addAnnotatedClass(Subscriptions.class);
-
+        configuration.addAnnotatedClass(PurchaseList.class);
         //build session factory from config and close it to release resources
         SessionFactory sessionFactory = configuration.buildSessionFactory();
         sessionFactory.close();
