@@ -7,16 +7,13 @@ public class PurchaseListId implements Serializable {
     private String studentName;
     private String courseName;
 
-    // Default constructor
     public PurchaseListId() {}
 
-    // Parameterized constructor
     public PurchaseListId(String studentName, String courseName) {
         this.studentName = studentName;
         this.courseName = courseName;
     }
 
-    // Getters and Setters
     public String getStudentName() {
         return studentName;
     }

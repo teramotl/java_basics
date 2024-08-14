@@ -20,7 +20,6 @@ public class Subscriptions {
     @Temporal(TemporalType.DATE)
     private Date subscriptionDate;
 
-    // Constructors, getters, and setters
     public Subscriptions() {}
 
     public Subscriptions(int studentId, int courseId, Date subscriptionDate) {

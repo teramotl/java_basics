@@ -7,7 +7,6 @@ public class SubscriptionId implements Serializable {
     private int studentId;
     private int courseId;
 
-    // Default constructor
     public SubscriptionId() {}
 
     // Parameterized constructor
@@ -16,7 +15,6 @@ public class SubscriptionId implements Serializable {
         this.courseId = courseId;
     }
 
-    // Getters and Setters
     public int getStudentId() {
         return studentId;
     }

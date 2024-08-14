@@ -24,7 +24,6 @@ public class PurchaseList {
     @Temporal(TemporalType.DATE)
     private Date subscriptionDate;
 
-    // Constructors
     public PurchaseList() {}
 
     public PurchaseList(String studentName, String courseName, int price, Date subscriptionDate) {
@@ -34,7 +33,6 @@ public class PurchaseList {
         this.subscriptionDate = subscriptionDate;
     }
 
-    // Getters and Setters
     public String getStudentName() {
         return studentName;
     }
