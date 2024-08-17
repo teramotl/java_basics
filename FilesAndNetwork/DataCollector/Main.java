@@ -21,7 +21,7 @@ public class Main {
             List<MetroStation> metroStations = metroParser.parseMetroData("https://skillbox-java.github.io/");
 
 
-            
+
 
             // Parse all CSV files and aggregate the data
             List<StationDate> allStationDates = new ArrayList<>();
