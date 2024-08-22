@@ -11,9 +11,9 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Queue;
 import java.util.Set;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.RecursiveAction;
 
 public class WebCrawler {
     private final Set<String> visited = new HashSet<>();
@@ -21,57 +21,76 @@ public class WebCrawler {
     private final BufferedWriter writer;
     private final int maxDepth;
     private final int delayMillis;
+    private final ForkJoinPool forkJoinPool;
 
     public WebCrawler(String domain, int maxDepth, int delayMillis) throws IOException {
         this.domain = normalizeDomain(domain);
         this.maxDepth = maxDepth;
         this.delayMillis = delayMillis;
         this.writer = new BufferedWriter(new FileWriter("sitemap.txt"));
+        this.forkJoinPool = new ForkJoinPool();
     }
 
     public void start(String startUrl) {
-        Queue<UrlDepthPair> queue = new LinkedList<>();
-        queue.add(new UrlDepthPair(startUrl, 0));
-
-        while (!queue.isEmpty()) {
-            UrlDepthPair current = queue.poll();
-            if (current.depth > maxDepth || visited.contains(current.url)) {
-                continue;
-            }
-
-            crawl(queue, current.url, current.depth);
-        }
-
         try {
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+            forkJoinPool.invoke(new CrawlTask(startUrl, 0));
+        } finally {
+            try {
+                writer.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            forkJoinPool.shutdown();
         }
     }
 
-    private void crawl(Queue<UrlDepthPair> queue, String url, int depth) {
-        try {
-            System.out.println("Crawling URL: " + url);
-            Document doc = Jsoup.connect(url).get();
-            visited.add(url);
-            writeIndentedLink(url, depth);
+    private class CrawlTask extends RecursiveAction {
+        private final String url;
+        private final int depth;
 
-            Elements links = doc.select("a[href]");
-            System.out.println("Found " + links.size() + " links on " + url);
+        public CrawlTask(String url, int depth) {
+            this.url = url;
+            this.depth = depth;
+        }
 
-            for (Element link : links) {
-                String absUrl = link.attr("abs:href");
-
-                if (isValidUrl(absUrl) && !visited.contains(absUrl)) {
-                    queue.add(new UrlDepthPair(absUrl, depth + 1));
-                }
+        @Override
+        protected void compute() {
+            if (depth > maxDepth || visited.contains(url)) {
+                return;
             }
 
-            // Pause between requests to avoid overwhelming the server
-            Thread.sleep(delayMillis);
-        } catch (IOException | InterruptedException e) {
-            System.err.println("Failed to fetch URL: " + url);
-            e.printStackTrace();
+            try {
+                synchronized (visited) {
+                    if (!visited.add(url)) {
+                        return;
+                    }
+                }
+
+                System.out.println("Crawling URL: " + url);
+                Document doc = Jsoup.connect(url).get();
+                writeIndentedLink(url, depth);
+
+                Elements links = doc.select("a[href]");
+                System.out.println("Found " + links.size() + " links on " + url);
+
+                Set<CrawlTask> tasks = new HashSet<>();
+
+                for (Element link : links) {
+                    String absUrl = link.attr("abs:href");
+
+                    if (isValidUrl(absUrl)) {
+                        tasks.add(new CrawlTask(absUrl, depth + 1));
+                    }
+                }
+
+                invokeAll(tasks);
+
+                // Pause between requests to avoid overwhelming the server
+                Thread.sleep(delayMillis);
+            } catch (IOException | InterruptedException e) {
+                System.err.println("Failed to fetch URL: " + url);
+                e.printStackTrace();
+            }
         }
     }
 
@@ -93,20 +112,12 @@ public class WebCrawler {
 
     private void writeIndentedLink(String url, int depth) {
         try {
-            writer.write(" ".repeat(depth * 4) + url);
-            writer.newLine();
+            synchronized (writer) {
+                writer.write(" ".repeat(depth * 4) + url);
+                writer.newLine();
+            }
         } catch (IOException e) {
             e.printStackTrace();
-        }
-    }
-
-    private static class UrlDepthPair {
-        String url;
-        int depth;
-
-        UrlDepthPair(String url, int depth) {
-            this.url = url;
-            this.depth = depth;
         }
     }
 }
