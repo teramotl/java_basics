@@ -88,20 +88,40 @@ public class NewsController {
     }
 
     @PutMapping
-    public ResponseEntity<?> updateNews(@RequestBody News news) {
-        if (newsService.existsById(news.getId())) {
-            News updatedNews = newsService.save(news);
-            NewsResponseDTO response = new NewsResponseDTO(
-                    updatedNews.getId(),
-                    updatedNews.getTitle(),
-                    updatedNews.getText(),
-                    updatedNews.getDate(),
-                    updatedNews.getCategory() != null ? updatedNews.getCategory().getTitle() : null
-            );
-            return ResponseEntity.ok(response);
+    public ResponseEntity<?> updateNews(@RequestBody Map<String, Object> newsData) {
+        Long id = ((Number) newsData.get("id")).longValue();
+        String title = (String) newsData.get("title");
+        String text = (String) newsData.get("text");
+        String categoryName = (String) newsData.get("category");
+
+        News existingNews = newsService.findById(id);
+        if (existingNews == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("{\"message\": \"Новость с id " + id + " не найдена.\"}");
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body("{\"message\": \"Новость с id " + news.getId() + " не найдена.\"}");
+
+        Category category = categoryService.findByName(categoryName);
+
+        if (category == null) {
+            category = new Category();
+            category.setTitle(categoryName);
+            category = categoryService.save(category);
+        }
+
+        existingNews.setTitle(title);
+        existingNews.setText(text);
+        existingNews.setDate(LocalDateTime.now()); // Update the date to the current time
+        existingNews.setCategory(category);
+
+        News updatedNews = newsService.save(existingNews);
+        NewsResponseDTO response = new NewsResponseDTO(
+                updatedNews.getId(),
+                updatedNews.getTitle(),
+                updatedNews.getText(),
+                updatedNews.getDate(),
+                updatedNews.getCategory() != null ? updatedNews.getCategory().getTitle() : null
+        );
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
