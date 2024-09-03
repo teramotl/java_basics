@@ -1,13 +1,18 @@
 package com.springApp.controller;
 
+import com.springApp.dto.NewsResponseDTO;
+import com.springApp.model.Category;
 import com.springApp.model.News;
+import com.springApp.service.CategoryService;
 import com.springApp.service.NewsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/news")
@@ -16,6 +21,9 @@ public class NewsController {
     @Autowired
     private NewsService newsService;
 
+    @Autowired
+    private CategoryService categoryService;
+
     @GetMapping("/{id}")
     public ResponseEntity<?> getNewsById(@PathVariable Long id) {
         News news = newsService.findById(id);
@@ -23,26 +31,73 @@ public class NewsController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("{\"message\": \"Новость с id " + id + " не найдена.\"}");
         }
-        return ResponseEntity.ok(news);
+        NewsResponseDTO response = new NewsResponseDTO(
+                news.getId(),
+                news.getTitle(),
+                news.getText(),
+                news.getDate(),
+                news.getCategory() != null ? news.getCategory().getTitle() : null
+        );
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping
-    public ResponseEntity<List<News>> getAllNews() {
+    public ResponseEntity<List<NewsResponseDTO>> getAllNews() {
         List<News> newsList = newsService.findAll();
-        return ResponseEntity.ok(newsList);
+        List<NewsResponseDTO> responseList = newsList.stream()
+                .map(news -> new NewsResponseDTO(
+                        news.getId(),
+                        news.getTitle(),
+                        news.getText(),
+                        news.getDate(),
+                        news.getCategory() != null ? news.getCategory().getTitle() : null
+                ))
+                .toList();
+        return ResponseEntity.ok(responseList);
     }
 
     @PostMapping
-    public ResponseEntity<News> createNews(@RequestBody News news) {
+    public ResponseEntity<?> createNews(@RequestBody Map<String, Object> newsData) {
+        String title = (String) newsData.get("title");
+        String text = (String) newsData.get("text");
+        String categoryName = (String) newsData.get("category");
+
+        Category category = categoryService.findByName(categoryName);
+
+        if (category == null) {
+            category = new Category();
+            category.setTitle(categoryName);
+            category = categoryService.save(category);
+        }
+
+        News news = new News();
+        news.setTitle(title);
+        news.setText(text);
+        news.setCategory(category);
+
         News createdNews = newsService.save(news);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdNews);
+        NewsResponseDTO response = new NewsResponseDTO(
+                createdNews.getId(),
+                createdNews.getTitle(),
+                createdNews.getText(),
+                createdNews.getDate(),
+                createdNews.getCategory() != null ? createdNews.getCategory().getTitle() : null
+        );
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PutMapping
     public ResponseEntity<?> updateNews(@RequestBody News news) {
         if (newsService.existsById(news.getId())) {
             News updatedNews = newsService.save(news);
-            return ResponseEntity.ok(updatedNews);
+            NewsResponseDTO response = new NewsResponseDTO(
+                    updatedNews.getId(),
+                    updatedNews.getTitle(),
+                    updatedNews.getText(),
+                    updatedNews.getDate(),
+                    updatedNews.getCategory() != null ? updatedNews.getCategory().getTitle() : null
+            );
+            return ResponseEntity.ok(response);
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body("{\"message\": \"Новость с id " + news.getId() + " не найдена.\"}");
@@ -59,8 +114,17 @@ public class NewsController {
     }
 
     @GetMapping("/category/{id}")
-    public ResponseEntity<List<News>> getNewsByCategoryId(@PathVariable Long id) {
+    public ResponseEntity<List<NewsResponseDTO>> getNewsByCategoryId(@PathVariable Long id) {
         List<News> newsList = newsService.findByCategoryId(id);
-        return ResponseEntity.ok(newsList);
+        List<NewsResponseDTO> responseList = newsList.stream()
+                .map(news -> new NewsResponseDTO(
+                        news.getId(),
+                        news.getTitle(),
+                        news.getText(),
+                        news.getDate(),
+                        news.getCategory() != null ? news.getCategory().getTitle() : null
+                ))
+                .toList();
+        return ResponseEntity.ok(responseList);
     }
 }
