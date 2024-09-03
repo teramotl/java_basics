@@ -73,6 +73,7 @@ public class NewsController {
         News news = new News();
         news.setTitle(title);
         news.setText(text);
+        news.setDate(LocalDateTime.now()); // Set the current date and time
         news.setCategory(category);
 
         News createdNews = newsService.save(news);

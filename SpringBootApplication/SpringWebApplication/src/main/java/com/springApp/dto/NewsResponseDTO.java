@@ -1,5 +1,6 @@
 package com.springApp.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDateTime;
 
 public class NewsResponseDTO {
@@ -7,7 +8,10 @@ public class NewsResponseDTO {
     private Long id;
     private String title;
     private String text;
+
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     private LocalDateTime date;
+
     private String category;
 
     public NewsResponseDTO(Long id, String title, String text, LocalDateTime date, String category) {
