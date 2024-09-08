@@ -1,27 +1,43 @@
 package com.skillbox.fibonacci;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/fibonacci")
 public class FibonacciController {
 
-    private final FibonacciService service;
+    private final FibonacciService fibonacciService;
 
-    public FibonacciController(FibonacciService service) {
-        this.service = service;
+    public FibonacciController(FibonacciService fibonacciService) {
+        this.fibonacciService = fibonacciService;
     }
 
-    @GetMapping("/fibonacci/{index}")
-    public ResponseEntity getNumber(@PathVariable int index) {
+    @GetMapping("/{index}")
+    public ResponseEntity<?> getNumber(@PathVariable int index) {
         try {
-            FibonacciNumber number = service.fibonacciNumber(index);
+            FibonacciNumber number = fibonacciService.fibonacciNumber(index);
             return ResponseEntity.ok(number);
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
         }
     }
+}
 
+class ErrorResponse {
+    private String message;
+
+    public ErrorResponse(String message) {
+        this.message = message;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
 }
